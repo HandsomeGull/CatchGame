@@ -66,7 +66,67 @@ namespace CatchGame
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            //move hero
+            if(leftDown == true && hero.X > 0)
+            {
+                hero.X -= heroSpeed;
+            }
 
+            if (rightDown == true && hero.X < this.Width - hero.Width)
+            {
+                hero.X += heroSpeed;
+            }
+
+            //is it time to make a new ball?
+            randValue = randGen.Next(1, 101);
+
+            if (randValue < 11) // 10% of a green ball
+            {
+                int x = randGen.Next(10,this.Width - ballSize * 2);
+
+                Rectangle newBall = new Rectangle(x, 0, ballSize, ballSize);
+                balls.Add(newBall);
+            }
+
+            //move all the balls
+            for (int i = 0; i < balls.Count(); i++)
+            {
+                //get the new position of y based on speed
+                int y = balls[i].Y + ballSpeed;
+
+                //replace the rectangle in the list with updated one
+                balls[i] = new Rectangle(balls[i].X, y, ballSize, ballSize);
+            }
+
+            //remove balls if they go beyond the play area
+            for (int i = 0; i < balls.Count(); i++)
+            {
+                if (balls[i].Y > hero.Y)
+                {
+                    balls.Remove(balls[i]); 
+                }
+            }
+
+            //check for collision between ball and player
+            for (int i = 0; i < balls.Count(); i++)
+            {
+                if (balls[i].IntersectsWith(hero))
+                {
+                    score += 5;
+                    balls.RemoveAt(i);
+                }
+            }
+
+            //decrease the time
+            time--;
+
+            //end the game if its time
+            if (time == 0)
+            {
+                gameTimer.Enabled = false;
+            }
+
+            Refresh();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -76,8 +136,7 @@ namespace CatchGame
             scoreLabel.Text = $"Score: {score}";
 
             //draw ground
-            e.Graphics.FillRectangle(greenBrush, 0, this.Height - groundHeight,
-                this.Width, groundHeight);
+            e.Graphics.FillRectangle(greenBrush, 0, this.Height - groundHeight, this.Width, groundHeight);
 
             //draw hero
             e.Graphics.FillRectangle(whiteBrush, hero);

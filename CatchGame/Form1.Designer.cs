@@ -41,7 +41,7 @@
             this.timeLabel.ForeColor = System.Drawing.Color.White;
             this.timeLabel.Location = new System.Drawing.Point(31, 20);
             this.timeLabel.Name = "timeLabel";
-            this.timeLabel.Size = new System.Drawing.Size(100, 23);
+            this.timeLabel.Size = new System.Drawing.Size(155, 23);
             this.timeLabel.TabIndex = 0;
             this.timeLabel.Text = "timeLabel";
             // 
